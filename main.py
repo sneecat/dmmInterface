@@ -1,9 +1,8 @@
-import tkinter as tk
-from tkinter import ttk
-import re
 import pyvisa
 # TODO: Make scpithread work with threading lol
-import threading
+# note: had a lot of trouble getting the queries to work
+# inside of a thread. I think this should focus on being
+# a communication library, and threading will come later
 from time import sleep
 rm = pyvisa.ResourceManager()
 
@@ -19,7 +18,7 @@ valid_mode_dict = {
     'CAP': '? AUTO'
 }
 
-class scpiThread():
+class scpi_handler():
     ''' wrapper for managing SCPI connection
         '''
     def connect(self, interval = 3):
@@ -82,39 +81,23 @@ class scpiThread():
         try:
             query = 'MEAS:' + self.instrument_mode + self.instrument_range
             reading = round(float(self.instrument.query(query)), 2)
+            reading = str(reading)
             if '9.9e+37' in reading:
                 reading = 'O/L'
-            else:
-                print(str(reading) + ' ' + self.instrument_mode)
+            
+                
+            print(str(reading) + ' ' + self.instrument_mode)
 
         except pyvisa.errors.VisaIOError:
             self.connect()
-siglent = scpiThread(scpiUSBport, 100) 
+
+siglent = scpi_handler(scpi_TCP_IP, 100) 
     
-
-# class gui():
-#     '''
-#         gui handler for updating display and sending commands from
-#         buttons to scpi, starting and stopping the connection
-#     '''
-#     def __init___():
-#         self.root = tk.Tk()
-#         self.measurment = tk.StringVar()
-#         self.wininit()
-
-#     def wininit():
-#         '''
-#             initialize window
-#         '''
-#         self.root.title('Multimeter')
-#         self.root.geometry('400x200-5+40')
-#         self.root.resizable(FALSE,FALSE)
-#         self.root.attributes("-topmost", 1)
-
-siglent.mode_set('CONT')
+siglent.mode_set('VOLT')
 def main():
     while 1:
         
         siglent.reading()
+        
 if __name__ == '__main__':
     main()
