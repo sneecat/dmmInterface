@@ -90,14 +90,3 @@ class scpi_handler():
 
         except pyvisa.errors.VisaIOError:
             self.connect()
-
-siglent = scpi_handler(scpi_TCP_IP, 100) 
-    
-siglent.mode_set('VOLT')
-def main():
-    while 1:
-        
-        siglent.reading()
-        
-if __name__ == '__main__':
-    main()
